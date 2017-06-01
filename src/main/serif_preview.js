@@ -150,37 +150,59 @@ export default class {
             return `<${tag}>${text}</${tag}>`;
         };
 
-        const diceReplacer = (match, diceNumber, diceSize, offset, string) => {
-            let html = '';
-            let dice = 0;
-            if (diceNumber > 1) {
-                let diceTotal = 0;
-                for (let i=0; i<diceNumber; i++) {
-                    dice = Math.floor(Math.random() * diceSize) + 1;
-                    if (diceSize <= 9) {
-                        html += dice === 1 ? `<span class="R4">1</span>` : dice;
-                    }
-                    else {
-                        html += `[${dice}]`;
-                    }
-                    diceTotal += dice;
-                }
-                if (diceSize <= 9) {
-                    return `<span class='DX'>【${diceNumber}D${diceSize}：<span class='D6'>${html}</span> = <b>${diceTotal}</b>】</span>`;
-                }
-                return `<span class='DX'>【${diceNumber}D${diceSize}：${html} = <b>${diceTotal}</b>】</span>`;
-            }
-            else {
-                dice = Math.floor(Math.random() * diceSize) + 1
-                if (diceSize <= 9) {
-                    dice = dice === 1 ? `<span class="R4">1</span>` : dice;
-                    return `<span class='DX'>【${diceNumber}D${diceSize}：<span class='D6'>${dice}</span>】</span>`;
-                }
-                return `<span class='DX'>【${diceNumber}D${diceSize}：[${dice}]】</span>`;
-            }
+        const diceReplacer = (dices, faces) => {
+
+            dices = Number(dices);
+            faces = Number(faces);
+
+            if(dices == 0) return '無を取得';
+            if(faces == 0) return '0面体(哲学)';
+
+            // 9面体以下専用スタイルを有効にするかどうか
+            let enableD6 = (faces <= 9);
+
+            let diceResults = throwDiceMultiple(dices, faces);
+
+            // ダイスの合計
+            let sum = diceResults.reduce((a,b) => a+b);
+
+            // 各ダイスの目の文字列表現を結合したもの
+            let diceStrings = diceResults.map(n => {
+                if(enableD6 && n === 1)
+                    return `<span class="R4">1</span>`;
+                return `[${n}]`;
+            }).join();
+
+            let html = '<span class="DX">';
+            html += `【${dices}D${faces}：`;
+            html += (enableD6
+                ? `<span class='D6'>${diceStrings}</span>`
+                : diceStrings);
+            if(dices >= 2)
+                html += ` = <b>${sum}</b>`
+            html += `】</span>`;
+
+            return html;
         };
+
+        const throwDiceMultiple = (dices, faces) => {
+            let results = [];
+
+            for(let i=0; i < dices; i++) {
+                results.push(throwDice(faces));
+            }
+
+            return results;
+        }
+
+        const throwDice = (faces) => {
+            return Math.floor(Math.random() * faces) + 1;
+        }
         
-        return html.replace(new RegExp(common.escapeHtml("<BR>"), "gi"), "<BR>").replace(decorationReg, decorationReplacer).replace(diceReg, diceReplacer);
+        return (html
+            .replace(new RegExp(common.escapeHtml("<BR>"), "gi"), "<BR>")
+            .replace(decorationReg, decorationReplacer)
+            .replace(diceReg, (match, group1, group2, offset, string) => diceReplacer(group1, group2)));
     }
 
     /**
