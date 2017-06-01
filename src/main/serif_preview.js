@@ -6,13 +6,16 @@ export default class {
      * @param {Node}   $serif           セリフ入力フォームの要素
      * @param {Node}   $iconElement     アイコン選択フォームの要素
      * @param {Node}   $cutin           演出画像URL入力フォームの要素
+     * @param {object} option           オプション
      * @param {number} serifLengthLimit セリフ文字数制限(戦闘400文字、トーク300文字)
      */
-    constructor($serif, $iconElement, $cutin = null, serifLengthLimit = 400) {
+    constructor($serif, $iconElement, $cutin, option, serifLengthLimit = 400) {
         this.$serif = $serif;
         this.$icon  = $iconElement;
         this.$cutin = $cutin;
+        this.option = option;
         this.serifLengthLimit = serifLengthLimit;
+        this.iconUrlList = this.getIconUrl();
 
         this.settingPreviewElement();
         this.addEventListeners();
@@ -151,27 +154,24 @@ export default class {
         };
 
         const diceReplacer = (dices, faces) => {
-
             dices = Number(dices);
             faces = Number(faces);
 
-            if(dices == 0) return '無を取得';
-            if(faces == 0) return '0面体(哲学)';
-
             // 9面体以下専用スタイルを有効にするかどうか
-            let enableD6 = (faces <= 9);
-
-            let diceResults = throwDiceMultiple(dices, faces);
+            const enableD6 = (faces <= 9);
+            const diceResults = throwDiceMultiple(dices, faces);
 
             // ダイスの合計
-            let sum = diceResults.reduce((a,b) => a+b);
+            const sum = diceResults.reduce((a,b) => a+b);
 
             // 各ダイスの目の文字列表現を結合したもの
-            let diceStrings = diceResults.map(n => {
-                if(enableD6 && n === 1)
+            const diceStrings = diceResults.map(n => {
+                if (enableD6 && n === 1)
                     return `<span class="R4">1</span>`;
+                if (enableD6) 
+                    return `${n}`;
                 return `[${n}]`;
-            }).join();
+            }).join('');
 
             let html = '<span class="DX">';
             html += `【${dices}D${faces}：`;
@@ -253,7 +253,7 @@ export default class {
      * アイコンのURLを取得する
      * @return {object} アイコンのURL一覧
      */
-    static getIconUrl() {
+    getIconUrl() {
         const $iconList = document.querySelectorAll("#CL1 td img");
         const iconUrlArray = [];
         $iconList.forEach(($icon, index) => {
