@@ -1,0 +1,29 @@
+{
+  "name": "hojoshita",
+  "version": "0.1.0",
+  "description": "コトシタを快適に遊べるよう様々な補助機能を付けるChrome用拡張機能です。",
+  "main": "main.js",
+  "author": "yagamuu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yagamuu/hojoshita.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yagamuu/hojoshita/issues"
+  },
+  "homepage": "https://twitter.com/yagamuu",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.5.1",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
+  },
+  "scripts": {
+    "build": "webpack",
+    "prod" : "webpack --env.production",
+    "watch": "webpack -w",
+    "start": "webpack-dev-server --progress --colors --hot"
+  }
+}
