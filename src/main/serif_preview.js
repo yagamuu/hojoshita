@@ -153,7 +153,10 @@ export default class {
             return `<${tag}>${text}</${tag}>`;
         };
 
-        const diceReplacer = (dices, faces) => {
+        const diceReplacer = (dices, faces, match) => {
+            // 1回のセリフでダイスロール出来るのは2回まで
+            if (++diceCnt > 2) return match;
+
             dices = Number(dices);
             faces = Number(faces);
 
@@ -202,7 +205,7 @@ export default class {
         return (html
             .replace(new RegExp(common.escapeHtml("<BR>"), "gi"), "<BR>")
             .replace(decorationReg, decorationReplacer)
-            .replace(diceReg, (match, group1, group2, offset, string) => diceReplacer(group1, group2)));
+            .replace(diceReg, (match, group1, group2, offset, string) => diceReplacer(group1, group2, match)));
     }
 
     /**
@@ -297,7 +300,7 @@ export default class {
      */
     settingPreviewElement() {
         const previewToggleInnerHTML =  `
-            <td colspan="4">
+            <td colspan="4" style="border:none;">
                 <span class="ABO">
                     <a class="previewToggle">▽ セリフプレビュー（クリックで表示/非表示）</a>
                 </span>
@@ -309,11 +312,11 @@ export default class {
 
         const width = 670;
         const previewInnerHtml = `
-            <td colspan="4">
+            <td colspan="4" style="border:none;">
                 <IMG SRC="http://lisge.com/kk/p/w1hd.png" WIDTH="${width}" HEIGHT=21><BR>
                 <TABLE cellspacing=0 class="FRL" style="width:${width}px;background-size:${width}px;">
                     <TR>
-                        <TD CLASS="FRB2 kkex_serifblock">
+                        <TD CLASS="FRB2 kkex_serifblock" style="border:none;">
                             <b class="B3">準備中</b>    
                         </TD>
                     </TR>
