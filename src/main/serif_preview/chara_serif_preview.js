@@ -11,15 +11,15 @@ export default option => {
         const $cutin = $container.nextElementSibling.querySelector('input[name^="en"]') || '';
         const preview = new serifPreview($serif, $icon, $cutin, option, 400);
         
-        // プレビュー用ブロックを生成
+        // プレビュー用ブロックを挿入
         const $nextElement = $container.nextElementSibling;
         if ($nextElement.querySelector('td').getAttribute('colspan') === "2") {
-            $nextElement.parentNode.insertBefore(preview.$previewHtml, $nextElement.nextElementSibling);
-            $nextElement.parentNode.insertBefore(preview.$previewToggleHtml, $nextElement.nextElementSibling);
+            $nextElement.parentNode.insertBefore(preview.$previewBlock, $nextElement.nextElementSibling);
+            $nextElement.parentNode.insertBefore(preview.$previewToggle, $nextElement.nextElementSibling);
         }
         else {
-            $container.parentNode.insertBefore(preview.$previewToggleHtml, $nextElement);
-            $container.parentNode.insertBefore(preview.$previewHtml, $nextElement);
+            $container.parentNode.insertBefore(preview.$previewToggle, $nextElement);
+            $container.parentNode.insertBefore(preview.$previewBlock, $nextElement);
         }
     });
 }

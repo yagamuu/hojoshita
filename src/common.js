@@ -1,3 +1,5 @@
+import h from 'hyperscript';
+
 export default {
     // 画像未設定アイコンURL
     ICON_NOIMAGE: 'http://ktst.x0.to/p/np2.gif',
@@ -53,6 +55,14 @@ export default {
     })(String),
 
     /**
+     * 改行コードをBRタグに置換
+     * 
+     * @param  {string} String 文字列
+     * @return {string} 置換した文字列
+     */
+    replaceLineBreakToHtml: html => html.replace(/(\r\n|\r|\n)/g, "<BR>"),
+
+    /**
      * GETパラメーターの取得
      * http://qiita.com/Evolutor_web/items/c9b940f752883676b35d
      * 
@@ -80,28 +90,25 @@ export default {
     path: url => location.pathname === url,
 
     /**
-     * テキストをHTMLで装飾して返す
+     * テキストを装飾してDOMを返す
      * 
      * @param  {string} text 装飾したいテキスト
      * @param  {string} type 装飾のタイプ
-     * @return {string} 装飾したテキストのHTML
+     * @return {node} 装飾したテキストのDOM
      */
-    createDecoratedHtml: (text, type = 'TTL') => {
+    createDecoratedDOM: (text, type = 'TTL') => {
         switch (type) {
             case 'TTL':
-                return `
-                    <div class="TTL">
-                        <table>
-                        <tbody>
-                        <tr>
-                            <td><img src="http://ktst.x0.to/p/t.png" width="20" height="20"></td>
-                            <td class="F4">${text}</td>
-                        </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    <br clear="ALL">
-                `;
+                return h(".TTL", 
+                    h("table", 
+                        h("tbody", 
+                            h("tr", 
+                                h("td", h("img", {
+                                    src: "http://ktst.x0.to/p/t.png",
+                                    width: "20",
+                                    height: "20"
+                                })),
+                                h("td", text)))));
             default:
                 return '';
         }

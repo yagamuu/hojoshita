@@ -2,7 +2,7 @@ import serifPreview from './serif_preview.js';
 
 export default option => {
     // セリフフォームを取得
-    const $serifList = document.querySelectorAll("tr.SED");
+    const $serifList = document.querySelectorAll("tr.LG");
 
     $serifList.forEach($tr => {
         const $container = $tr.querySelector('td');
@@ -12,8 +12,8 @@ export default option => {
         const preview = new serifPreview($serif, $icon, $cutin, option, 400);
         
         let $previewHtml = document.createElement('table');
-        $previewHtml.appendChild(preview.$previewToggleHtml);
-        $previewHtml.appendChild(preview.$previewHtml);
+        $previewHtml.appendChild(preview.$previewToggle);
+        $previewHtml.appendChild(preview.$previewBlock);
         $container.appendChild($previewHtml);
     });
 }

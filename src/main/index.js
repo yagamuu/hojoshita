@@ -1,8 +1,8 @@
 import common from '../common.js';
-import charaSerifPreview from './chara_serif_preview.js';
-import skillSerifPreview from './skill_serif_preview.js';
-import linkSerifPreview from './link_serif_preview.js';
-import talkSerifPreview from './talk_serif_preview.js';
+import charaSerifPreview from './serif_preview/chara_serif_preview.js';
+import skillSerifPreview from './serif_preview/skill_serif_preview.js';
+import linkSerifPreview from './serif_preview/link_serif_preview.js';
+import talkSerifPreview from './serif_preview/talk_serif_preview.js';
 
 chrome.storage.sync.get(common.getOptionDefault(), (option) => {
     if (option.enableSerifPreview) {
