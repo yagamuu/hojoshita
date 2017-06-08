@@ -3,9 +3,10 @@ import charaSerifPreview from './serif_preview/chara_serif_preview.js';
 import skillSerifPreview from './serif_preview/skill_serif_preview.js';
 import linkSerifPreview from './serif_preview/link_serif_preview.js';
 import talkSerifPreview from './serif_preview/talk_serif_preview.js';
+import skillSort from './sort/skill.js';
 
 chrome.storage.sync.get(common.getOptionDefault(), (option) => {
-    if (option.enableSerifPreview) {
+    if (option.checkbox.enableSerifPreview) {
         if (common.path("/kk/a_chara.php")) 
             charaSerifPreview(option);
         else if (common.path("/kk/a_skill.php")) 
@@ -14,5 +15,9 @@ chrome.storage.sync.get(common.getOptionDefault(), (option) => {
             linkSerifPreview(option);
         else if (common.path("/kk/a_talk.php")) 
             talkSerifPreview(option);
+    }
+    if (option.checkbox.enableSort) {
+        if (common.path("/kk/a_skill.php")) 
+            skillSort(option);
     }
 });

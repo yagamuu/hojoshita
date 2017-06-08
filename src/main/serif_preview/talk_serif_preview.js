@@ -1,28 +1,27 @@
-import serifPreview from './serif_preview.js';
+import talkPreview from './talk_class.js';
 
 export default option => {
     // セリフフォームを取得(メイン)
-    const $serifList = document.querySelector("textarea.ARE");
+    const $textArea = document.querySelector("textarea.ARE");
     
-    const $container = $textarea.parentNode.parentNode;
-    const $icon  = $container.querySelector('select[name^="ic"]');
-    const preview = new serifPreview($textarea, $icon, '', option, 300);
-    let $previewHtml = document.createElement('table');
-    $previewHtml.appendChild(preview.$previewToggleHtml);
-    $previewHtml.appendChild(preview.$previewHtml);
-    $container.appendChild($previewHtml);
+    const $parent = $textArea.parentNode.parentNode;
+    const preview = new talkPreview($parent, option);
+    $parent.parentNode.parentNode.appendChild(preview.$previewToggle);
+    $parent.parentNode.parentNode.appendChild(preview.$previewBlock);
 
     /** 
      * 返信ボタンクリック時のイベントハンドラにプレビュー要素追加のイベントを追加
      * ※返信用の入力フォームが用意されるエレメントは最初空で、返信ボタンをクリックした際にDOM挿入が行われる
      */
     const replyButtonEventListener = e => {
-        let form = event.currentTarget.parentNode.parentNode.parentNode.nextSibling.nextSibling.querySelector('form');
-        let talkPreview = new talkPreview(form, character);
-        form.appendChild(talkPreview.previewArea);
-        talkPreview.init();
+        const messageNum = e.currentTarget.querySelector("a[nn]").getAttribute("nn");
+        const $parent = document.getElementById("re" + messageNum);
+        const preview = new talkPreview($parent, option);
 
-        event.currentTarget.removeEventListener('click', eventListener);
+        $parent.appendChild(preview.$previewToggle);
+        $parent.appendChild(preview.$previewBlock);
+
+        e.currentTarget.removeEventListener('click', replyButtonEventListener);
     };
 
     document.querySelectorAll('a.RE').forEach($button => {

@@ -5,15 +5,12 @@ export default option => {
     const $serifList = document.querySelectorAll("tr.LG");
 
     $serifList.forEach($tr => {
-        const $container = $tr.querySelector('td');
-        const $serif = $container.querySelector('input[name^="se"]');
-        const $icon  = $container.querySelector('select[name^="ic"]');
-        const $cutin = $container.querySelector('input[name^="en"]') || '';
-        const preview = new serifPreview($serif, $icon, $cutin, option, 400);
+        const $parent = $tr.querySelector('td');
+        const preview = new serifPreview($parent, option);
         
-        let $previewHtml = document.createElement('table');
-        $previewHtml.appendChild(preview.$previewToggle);
-        $previewHtml.appendChild(preview.$previewBlock);
-        $container.appendChild($previewHtml);
+        let $table = document.createElement('table');
+        $table.appendChild(preview.$previewToggle);
+        $table.appendChild(preview.$previewBlock);
+        $parent.appendChild($table);
     });
 }

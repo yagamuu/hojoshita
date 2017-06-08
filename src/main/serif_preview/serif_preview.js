@@ -6,19 +6,25 @@ import h from 'hyperscript';
 export default class {
     /**
      * コンストラクタ
-     * @param {Node}   $serif           セリフ入力フォームの要素
-     * @param {Node}   $icon            アイコン選択フォームの要素
-     * @param {Node}   $cutin           演出画像URL入力フォームの要素
-     * @param {object} option           オプション
-     * @param {number} serifLengthLimit セリフ文字数制限(戦闘400文字、トーク300文字)
+     * @param {Node}   $parent 各種入力フォームの親要素
+     * @param {object} option オプション
      */
-    constructor($serif, $icon, $cutin, option, serifLengthLimit = 400) {
-        this.$serif = $serif;
-        this.$icon  = $icon;
-        this.$cutin = $cutin;
-        this.option = option;
-        this.serifLengthLimit = serifLengthLimit;
+    constructor($parent, option) {
+        this.$parent = $parent;
+        this.option  = option;
         this.iconUrlList = this.getIconUrl();
+
+        this.execute();
+    }
+
+    /*
+     * インスタンス生成した際に実行する処理
+     */
+    execute() {
+        this.$serif = this.$parent.querySelector('input[name^="se"]');
+        this.$icon  = this.$parent.getElementsByTagName('select')[0];
+        this.$cutin = this.$parent.querySelector('input[name^="en"]') || '';
+        if (common.path("/kk/a_chara.php")) this.$cutin = this.$parent.nextElementSibling.querySelector('input[name^="en"]') || '';
 
         this.createPreviewAreaDOM();
         this.addEventListeners();
@@ -113,8 +119,8 @@ export default class {
      */
     convertSerifText(serifText) {
         if (!serifText) return [];
-        if (serifText.length > this.serifLengthLimit) {
-            const count = serifText.length - this.serifLengthLimit;
+        if (serifText.length > 400) {
+            const count = serifText.length - 400;
             return { error: `※セリフの文字数が制限を超えています。残り${count}字減らして下さい` };
         }
 
@@ -311,10 +317,10 @@ export default class {
             this.$preview.appendChild(h("br", {clear: "ALL"}));
         }
         serifData.forEach((serif, index) => {
+            this.$preview.appendChild(h("span.LKT", `■${index+1} / ${serifData.length}`));
+            this.$preview.appendChild(h("br"));
             // +++で区切られた連続セリフを考慮
-            serif.forEach((serif, index) => {
-                this.$preview.appendChild(h("span.LKT", `■${index+1} / ${serifData.length}`));
-                this.$preview.appendChild(h("br"));
+            serif.forEach(serif => {
                 if (!serif) return;
 
                 // ＞@@とすると発言者名が消えて「」も消えます。
@@ -335,16 +341,15 @@ export default class {
                                 $serifBody
                             )))));
                 this.$preview.appendChild(h(".CL"));
-
-                // 演出画像
-                if (cutinData.length !== 0 && !enableCutinList && cutinData[index].src !== "") {
-                    this.$preview.appendChild(h("img.lazy", {
-                        src: cutinData[index].src,
-                        width: "600",
-                        height: cutinData[index].size
-                    }));
-                }
             });
+            // 演出画像
+            if (cutinData.length !== 0 && !enableCutinList && cutinData[index].src !== "") {
+                this.$preview.appendChild(h("img.lazy", {
+                    src: cutinData[index].src,
+                    width: "600",
+                    height: cutinData[index].size
+                }));
+            }
         });
 
         // セリフと演出画像の区切り数が異なる場合は個別で演出画像を一覧表示
