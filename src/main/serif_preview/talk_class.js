@@ -28,8 +28,8 @@ export default class extends serifPreview {
         this.$preview = h("tr", { valign: "TOP" },'準備中');
 
         // $previewの親ブロック要素
-        const previewBlockClass = this.$parent.parentNode.className === "SY" ? "SY1" : "SY";
-        const $previewBlock = h("." + previewBlockClass, { style: "opacity: 0; transition: opacity 0.3s; display: none;" },
+        const previewBlockClass = this.$parent.parentNode.className === "SY" ? ".SY1" : ".SY";
+        const $previewBlock = h(previewBlockClass, { style: "opacity: 0; transition: opacity 0.3s; display: none;" },
             h("table", { 
                 width: "364",
                 cellPadding: "0",
@@ -81,7 +81,7 @@ export default class extends serifPreview {
     }
 
     /**
-     * 入力されたセリフをオブジェクト配列に変換
+     * 入力されたセリフをオブジェクトに変換
      * @param  {string} serifText フォームに入力されたセリフ文字列
      * @return {object} オブジェクト型に変換したセリフ
      */
@@ -91,17 +91,9 @@ export default class extends serifPreview {
             const count = serifText.length - 300;
             return { error: `※セリフの文字数が制限を超えています。残り${count}字減らして下さい` };
         }
-        return this.buildSerifObject(serifText);
-    }
 
-    /**
-     * セリフ文字列を読み込みオブジェクト化
-     * @param  {string} text 分解したフォームに入力されたセリフ文字列
-     * @return {object} オブジェクト型に変換したセリフ
-     */
-    buildSerifObject(text) {
         let serif = new serifClass();
-        serif.text = common.escapeHtml(text);
+        serif.text = common.escapeHtml(serifText);
 
         // アイコン番号設定
         serif.icon = this.$icon.value;
