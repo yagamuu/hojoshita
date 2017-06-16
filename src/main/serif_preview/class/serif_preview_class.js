@@ -1,6 +1,6 @@
-import common from '../../common.js';
-import serifClass from './serif_class.js';
-import cutinClass from './cutin_class.js';
+import common from '../../../common.js';
+import serifClass from './serif_data_class.js';
+import cutinClass from './cutin_data_class.js';
 import h from 'hyperscript';
 
 export default class {
@@ -12,15 +12,8 @@ export default class {
     constructor($parent, option) {
         this.$parent = $parent;
         this.option  = option;
-        this.iconUrlList = this.getIconUrl();
+        this.iconUrlList = common.getIconUrl();
 
-        this.execute();
-    }
-
-    /*
-     * インスタンス生成した際に実行する処理
-     */
-    execute() {
         this.$serif = this.$parent.querySelector('input[name^="se"]');
         this.$icon  = this.$parent.getElementsByTagName('select')[0];
         this.$cutin = this.$parent.querySelector('input[name^="en"]') || '';
@@ -367,20 +360,6 @@ export default class {
             });
         }
 
-    }
-
-    /**
-     * アイコンのURLを取得する
-     * @return {object} アイコンのURL一覧
-     */
-    getIconUrl() {
-        const $iconList = document.querySelectorAll("#CL1 td img");
-        let iconUrlArray = [];
-        $iconList.forEach(($icon, index) => {
-            if ($icon.getAttribute('alt') !== "") iconUrlArray[index] = $icon.getAttribute('src');
-        });
-
-        return iconUrlArray;
     }
     
     /**

@@ -26,8 +26,8 @@ export default option => {
         const $skillForStory = document.querySelectorAll("tr[dn='2']:not(.LG)");
 
         // DOMとスキル内容を保持した配列を作成
-        let skillForMyselfList = [];
-        let skillForStoryList = [];
+        const skillForMyselfList = [];
+        const skillForStoryList = [];
 
         const skillTimingList = mode === 'active' ? 
             common.getActiveSkillTiming().concat(common.getPassiveSkillTiming())
@@ -42,16 +42,14 @@ export default option => {
              * 3:スキル効果
              */
             const skillReg = /^【(.+?)(?::SP\d+)?】(.).*?:(.+)/;
-            const skillTarget = ['自','味','対','敵','他'];
-
-            let skillData = {};
-            skillData.element = $.children[1].querySelector("input");
             const skillMatch = skillReg.exec($.children[3].textContent);
-            skillData.timing = skillTimingList.indexOf(skillMatch[1]);
-            skillData.target = skillTarget.indexOf(skillMatch[2]);
-            skillData.effect = skillMatch[3];
 
-            return skillData;
+            return {
+                element: $.children[1].querySelector("input"),
+                timing: skillTimingList.indexOf(skillMatch[1]),
+                target: ['自','味','対','敵','他'].indexOf(skillMatch[2]),
+                effect: skillMatch[3]
+            };
         };
         $skillForMyself.forEach($ => {
             skillForMyselfList.push(getSkillData($));
@@ -62,7 +60,7 @@ export default option => {
 
         /* 
          * 配列をソートし順番通りに並び順入力テキストボックスに入力
-         * 発動タイミング＜スキル対象＜スキル効果の長さの順にソート
+         * 発動タイミング＞スキル対象＞スキル効果の長さの順にソート
          */
         const sortSkillFunc = (a, b) => {
             if (a.timing < b.timing) return -1;

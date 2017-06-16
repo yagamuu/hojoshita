@@ -13,7 +13,9 @@ export default {
         return {
             checkbox: {
                 enableSerifPreview: true, // セリフプレビューを有効にするか
-                enableSort:         true, // ソート機能を有効にするか
+                enableSkillSort: true, // スキルソート機能を有効にするか
+                enableLinkerSort: true, // リンクしているキャラ表ソート機能を有効にするか
+                enableLinkerDecoration: false, // リンクしているキャラ表を装飾するか
             },
             serifNameDefault:   "名前未設定", // セリフを発するキャラのデフォ名
             iconNameArray:      []           // アイコンに設定されたキャラ名リスト
@@ -91,6 +93,20 @@ export default {
      * @return {boolean} 現在のアクセス先とURLが一致しているか
      */
     path: url => location.pathname === url,
+
+    /**
+     * アイコンのURLを取得する
+     * @return {object} アイコンのURL一覧
+     */
+    getIconUrl: () => {
+        const $iconList = document.querySelectorAll("#CL1 td img");
+        let iconUrlArray = [];
+        $iconList.forEach(($icon, index) => {
+            if ($icon.getAttribute('alt') !== "") iconUrlArray[index] = $icon.getAttribute('src');
+        });
+
+        return iconUrlArray;
+    },
 
     /**
      * テキストを装飾してDOMを返す

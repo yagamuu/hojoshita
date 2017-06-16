@@ -1,4 +1,4 @@
-import talkPreview from './talk_class.js';
+import talkPreview from './class/talk_preview_class.js';
 
 export default option => {
     // セリフフォームを取得(メイン)

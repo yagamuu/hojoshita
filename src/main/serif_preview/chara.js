@@ -1,4 +1,4 @@
-import serifPreview from './serif_preview.js';
+import serifPreview from './class/serif_preview_class.js';
 
 export default option => {
     option = serifPreview.saveIconNameArray(option);

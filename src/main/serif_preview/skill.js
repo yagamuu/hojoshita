@@ -1,8 +1,8 @@
-import serifPreview from './serif_preview.js';
+import serifPreview from './class/serif_preview_class.js';
 
 export default option => {
     // セリフフォームを取得
-    const $serifList = document.querySelectorAll("tr.LG");
+    const $serifList = document.querySelectorAll("tr.SED");
 
     $serifList.forEach($tr => {
         const $parent = $tr.querySelector('td');

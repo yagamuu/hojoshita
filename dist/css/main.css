@@ -1,0 +1,40 @@
+/*
+ * ステータス装飾
+ */
+.hjst-status-decoration-st {
+    color: #E34E32;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hjst-status-decoration-ag {
+    /* color: #E3C530; */
+    color: #999933;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hjst-status-decoration-dx {
+    /* color: #6CE331; */
+    color: #339933;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hjst-status-decoration-in {
+    color: #4E32E3;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hjst-status-decoration-vt {
+    color: #E332B5;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hjst-status-decoration-mn {
+    color: #2AB9B9;
+    font-size: 12px;
+    font-weight: bold;
+}

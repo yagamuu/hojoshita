@@ -1,16 +1,21 @@
-import common from '../../common.js';
-import serifPreview from './serif_preview.js';
-import serifClass from './serif_class.js';
+import common from '../../../common.js';
+import serifClass from './serif_data_class.js';
 import h from 'hyperscript';
 
 /*
  * トーク用クラス
  */
-export default class extends serifPreview {
-    /*
-     * インスタンス生成した際に実行する処理
+export default class {
+    /**
+     * コンストラクタ
+     * @param {Node}   $parent 各種入力フォームの親要素
+     * @param {object} option オプション
      */
-    execute() {
+    constructor($parent, option) {
+        this.$parent = $parent;
+        this.option  = option;
+        this.iconUrlList = common.getIconUrl();
+
         this.$serif   = this.$parent.getElementsByTagName('textarea')[0];
         this.$icon    = this.$parent.getElementsByTagName('select')[0];
         this.$speaker = this.$parent.querySelector('input');
@@ -102,6 +107,93 @@ export default class extends serifPreview {
         serif.text = this.decorationText(serif.text);
 
         return serif;
+    }
+
+    /**
+     * 文字列を特殊文法に基づき装飾
+     * 
+     * 以下ルールブックより抜粋
+     * <F5>文字変更</F5>
+     * 囲んだ部分の文字サイズを変更します。
+     * 数字は1～7で、省略すると通常サイズ（セリフ：3、発言：2）になります。
+     * F を I にすると 斜体 、S にすると 取消線 、U にすると 下線 になります。
+     * 
+     * < [ダイス数] D [ダイス面数] >
+     * ダイスロールができます。1セリフ内に2回まで有効です。
+     * ダイス数は1～99、ダイス面数は1～999の半角数字で指定します。
+     * 
+     * @param  {string} text セリフ文字列
+     * @return {string} 装飾したセリフ文字列
+     */
+    decorationText(text) {
+        const fontReg = new RegExp(common.escapeHtml("<(F(?=\\d)|I|S|U)([1-7])?>(.*?)</\\1\\2>"), "ig");
+        const diceReg = new RegExp(common.escapeHtml("<(\\d{1,2})D(\\d{1,3})>"), "ig");
+        let diceCnt = 0;
+        
+        // タグ装飾置換処理
+        const fontReplacer = (match, tag, size, text) => {
+            tag = tag.toUpperCase();
+            if (tag === 'F') {
+                tag = 'B';
+            }
+            
+            if (size) return `<${tag} class="F${size}">${text}</${tag}>`;
+            
+            return `<${tag}>${text}</${tag}>`;
+        };
+
+        // ダイスロール置換処理
+        const diceReplacer = (dices, faces, match) => {
+            // 1回のセリフでダイスロール出来るのは2回まで
+            if (++diceCnt > 2) return match;
+
+            dices = Number(dices);
+            faces = Number(faces);
+
+            // 9面体以下専用スタイルを有効にするかどうか
+            const enableD6 = (faces <= 9);
+            const diceResults = throwDiceMultiple(dices, faces);
+
+            // ダイスの合計
+            const sum = diceResults.reduce((a,b) => a+b);
+
+            // 各ダイスの目の文字列表現を結合したもの
+            const diceStrings = diceResults.map(n => {
+                if (enableD6 && n === 1)
+                    return `<span class="R4">1</span>`;
+                if (enableD6) 
+                    return `${n}`;
+                return `[${n}]`;
+            }).join('');
+
+            let html = '<span class="DX">';
+            html += `【${dices}D${faces}：`;
+            html += (enableD6
+                ? `<span class='D6'>${diceStrings}</span>`
+                : diceStrings);
+            if (dices >= 2)
+                html += ` = <b>${sum}</b>`
+            html += `】</span>`;
+
+            return html;
+        };
+
+        const throwDiceMultiple = (dices, faces) => {
+            let results = [];
+
+            for (let i=0; i < dices; i++) {
+                results.push(throwDice(faces));
+            }
+
+            return results;
+        }
+
+        const throwDice = faces => Math.floor(Math.random() * faces) + 1;
+        
+        return (common.replaceLineBreakToHtml(text)
+            .replace(new RegExp(common.escapeHtml("<BR>"), "gi"), "<BR>")
+            .replace(fontReg, fontReplacer)
+            .replace(diceReg, (match, group1, group2, offset, string) => diceReplacer(group1, group2, match)));
     }
 
     /**
