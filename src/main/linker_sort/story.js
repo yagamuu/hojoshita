@@ -3,7 +3,7 @@ import h from 'hyperscript';
 
 export default option => {
     if (!common.getUrlVars()['mno']) return;
-    const $container = document.getElementsByClassName("LST").item(0);
+    const $container = document.getElementsByClassName("LST").item(1);
     const sort = new linkerSort($container, option);
 }
 

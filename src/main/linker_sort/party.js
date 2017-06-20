@@ -73,8 +73,11 @@ class linkerSort {
             const conquer = /討\[(\d)(\d)\]/.exec(linkerStatusText);
             const practice = /練\[(\d)(\d)\]/.exec(linkerStatusText);
 
+            const $domList = [$linker, $linkerStatus];
+            if ($linkerStatus.nextElementSibling.className === 'LG') $domList.push($linkerStatus.nextElementSibling);
+
             return {
-                dom: [$linker, $linkerStatus, $linkerStatus.nextElementSibling],
+                dom: $domList,
                 data: {
                     eno: ~~/^.*?\((\d+)\)$/.exec($linker.children[6].textContent)[1],
                     st:  ~~/ST:(\d+)/.exec(linkerStatusText)[1],

@@ -1,6 +1,6 @@
 export default option => {
-    const $container = document.getElementsByClassName("LST").item(0);
-    $container.querySelectorAll("tr:not(.B2)").forEach($linker => {
+    const $container = document.querySelectorAll(".LST");
+    $container.forEach( $ => { $.querySelectorAll("tr:not(.B2)").forEach($linker => {
         const $target = $linker.children[4];
         // 線グラフの高さ変更
         $target.querySelectorAll('img').forEach($img => { $img.setAttribute("height", "10"); });
@@ -15,5 +15,5 @@ export default option => {
         html = html.replace(/MN:\d+/, '<span class="B2B">$&</span>');
         
         $target.innerHTML = html;
-    });
+    })});
 }
