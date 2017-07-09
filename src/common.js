@@ -17,8 +17,10 @@ export default {
                 enableLinkerSort: true, // リンクしているキャラ表ソート機能を有効にするか
                 enableLinkerDecoration: false, // リンクしているキャラ表を装飾するか
             },
+            hidden: {
+            },
             serifNameDefault:   "名前未設定", // セリフを発するキャラのデフォ名
-            iconNameArray:      []           // アイコンに設定されたキャラ名リスト
+            iconNameArray:      [],          // アイコンに設定されたキャラ名リスト
         };
     },
 

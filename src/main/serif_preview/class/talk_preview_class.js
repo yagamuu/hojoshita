@@ -126,15 +126,18 @@ export default class {
      * @return {string} 装飾したセリフ文字列
      */
     decorationText(text) {
-        const fontReg = new RegExp(common.escapeHtml("<(F(?=\\d)|I|S|U)([1-7])?>(.*?)</\\1\\2>"), "ig");
+        const fontReg = new RegExp(common.escapeHtml("<(F(?=\\d)|I|S|U|B)([1-7])?>(.*?)</\\1\\2>"), "ig");
         const diceReg = new RegExp(common.escapeHtml("<(\\d{1,2})D(\\d{1,3})>"), "ig");
         let diceCnt = 0;
         
         // タグ装飾置換処理
         const fontReplacer = (match, tag, size, text) => {
+            if (fontReg.test(text)) {
+                text = text.replace(fontReg, fontReplacer);
+            }
             tag = tag.toUpperCase();
             if (tag === 'F') {
-                tag = 'B';
+                tag = 'span';
             }
             
             if (size) return `<${tag} class="F${size}">${text}</${tag}>`;

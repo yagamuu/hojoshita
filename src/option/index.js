@@ -16,3 +16,12 @@ document.getElementById('put').addEventListener('click', () => {
     
     common.setStorage(option);
 });
+
+// 隠し機能ONOFF
+function enableHiddenFunction(mode) {
+    let option = common.getOptionDefault();
+    if (option.hidden.hasOwnProperty(mode)) {
+        option.hidden[mode] = option.hidden[mode] ? false : true;
+        common.setStorage(option);
+    }
+};
